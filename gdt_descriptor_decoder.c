@@ -12,7 +12,7 @@
 #include <string.h>
 #include <assert.h>
 
-struct gdt
+struct gdt_desc
 {
     uint16_t limit_0_15;                // 0:15
     uint16_t base_0_15;                 // 16:32
@@ -73,11 +73,11 @@ static inline void dump_flags(struct flags fl)
 
 int main(int argc, char **argv)
 {
-    struct gdt desc;
+    struct gdt_desc desc;
     uint64_t qword;
     uint32_t base, limit;
 
-    assert(sizeof(struct gdt) == 8);
+    assert(sizeof(struct gdt_desc) == 8);
     if (argc != 2) {
         printf("%s <gdt descriptor>\n", argv[0]);
         return -1;
@@ -85,7 +85,7 @@ int main(int argc, char **argv)
 
     // Copy 64-bit value into the descriptor structure.
     qword = strtoll(argv[1], NULL, 16);
-    memcpy(&desc, &qword, sizeof(struct gdt));
+    memcpy(&desc, &qword, sizeof(struct gdt_desc));
 
     printf("Segment descriptor details\n");
     printf("---------------------------\n");
