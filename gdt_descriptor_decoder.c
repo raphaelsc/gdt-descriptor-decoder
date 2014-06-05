@@ -44,8 +44,7 @@ static inline uint32_t build_base(uint16_t base_0_15, uint8_t base_16_23,
     return base_0_15 | (base_16_23 << 16) | (base_24_31 << 24);
 }
 
-static inline uint32_t build_limit(uint16_t limit_0_15, uint8_t limit_16_19,
-    bool granularity)
+static inline uint32_t build_limit(uint16_t limit_0_15, uint8_t limit_16_19)
 {
     uint32_t limit;
     limit = limit_0_15 | ((limit_16_19 & 0xF) << 16);
@@ -100,7 +99,7 @@ int main(int argc, char **argv)
     } else {
         printf("Mode: %d-bit Protected mode\n", (desc.fl.sz) ? 32 : 16);
         base = build_base(desc.base_0_15, desc.base_0_15, desc.base_24_31);
-        limit = build_limit(desc.limit_0_15, desc.limit_16_19, desc.fl.gran);
+        limit = build_limit(desc.limit_0_15, desc.limit_16_19);
         printf("Base=%08x, Limit=%08x\n", base, limit);
     }
     printf("* Access byte:\n");
