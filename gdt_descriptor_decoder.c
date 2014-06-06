@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <string.h>
 #include <assert.h>
 
@@ -51,10 +52,12 @@ static inline uint32_t build_limit(uint16_t limit_0_15, uint8_t limit_16_19)
 static inline void dump_access_byte(struct access_byte ab)
 {
     assert(ab.one == 1);
-    printf("Accessed=%d, RW=%d, DC=%d<grows %s>, Exec=%d, "
+    printf("Accessed=%d, %s=%d, D/C=%d%s, Exec=%d, "
         "DPL(ring level)=%d<%s>, Present=%d\n",
-        ab.access, ab.rw,
-        ab.dc, (!ab.dc) ? "up" : "down",
+        ab.access, 
+	(ab.ex) ? "R" : "RW", ab.rw,
+        ab.dc, 
+	(!ab.ex) ? (!ab.dc) ? "<up>" : "<down>" : "",
         ab.ex,
         ab.privl, (ab.privl != 3) ? "system" : "user",
         ab.pr);
@@ -66,6 +69,11 @@ static inline void dump_flags(struct flags fl)
     assert(fl.zero == 0);
     printf("L(x86-64 only)=%d, Size=%d<pm %d>, Granularity=%d\n",
         fl.l, fl.sz, (fl.sz) ? 32 : 16, fl.gran);
+}
+
+static const char *get_descriptor_type(bool exec_bit)
+{
+    return (exec_bit) ? "code" : "data";
 }
 
 int main(int argc, char **argv)
@@ -88,15 +96,20 @@ int main(int argc, char **argv)
     printf("---------------------------\n");
     // Detect whether or not the descriptor is 64-bit.
     if (desc.fl.l) {
-        printf("Mode: Long mode\n");
+        printf("Mode: Long mode\nType: %s\n",
+	    get_descriptor_type(desc.ab.ex));
         printf("Base=0, Limit=ffffffffffffffff\n");
         if (desc.fl.sz) {
             printf("Warning: the flag Size should be unset for long mode!\n");
         }
     } else {
-        printf("Mode: %d-bit Protected mode\n", (desc.fl.sz) ? 32 : 16);
+        printf("Mode: %d-bit Protected mode\nType: %s\n", 
+	    (desc.fl.sz) ? 32 : 16, get_descriptor_type(desc.ab.ex));
         base = build_base(desc.base_0_15, desc.base_0_15, desc.base_24_31);
         limit = build_limit(desc.limit_0_15, desc.limit_16_19);
+	if (desc.fl.gran) {
+	    limit = (limit << 12U) + 0xFFF;
+	}
         printf("Base=%08x, Limit=%08x\n", base, limit);
     }
     printf("* Access byte:\n");

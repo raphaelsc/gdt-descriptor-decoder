@@ -5,10 +5,10 @@ OBJ=gdt_descriptor_decoder.o
 %.o: %.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-gdt_descriptor_decoder: $(OBJ)
+gdt-dd: $(OBJ)
 	gcc -o $@ $^ $(CFLAGS)
 
 .PHONY: clean
 
 clean:
-	rm -f gdt_descriptor_decoder *.o *~ *.out
+	rm -f gdt-dd *.o *~ *.out
