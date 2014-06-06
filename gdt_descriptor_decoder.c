@@ -46,9 +46,7 @@ static inline uint32_t build_base(uint16_t base_0_15, uint8_t base_16_23,
 
 static inline uint32_t build_limit(uint16_t limit_0_15, uint8_t limit_16_19)
 {
-    uint32_t limit;
-    limit = limit_0_15 | ((limit_16_19 & 0xF) << 16);
-    return limit;
+    return limit_0_15 | ((limit_16_19 & 0xF) << 16);
 }
 
 static inline void dump_access_byte(struct access_byte ab)
