@@ -3,13 +3,13 @@ GDT descriptor decoder
 
 Usage:
 
-$ ./a.out EF9B000000FFFF
+$ ./gdt-dd 00cf93000000ffff
 Segment descriptor details
 ---------------------------
-Mode: Long mode
-Base=0, Limit=ffffffffffffffff
-Warning: the flag Size should be unset for long mode!
+Mode: 32-bit Protected mode
+Type: data
+Base=00000000, Limit=ffffffff
 * Access byte:
-Access=1, RW=1, DC=0<grows up>, Exec=1, DPL(ring level)=0<system>, Present=1
+Accessed=1, RW=1, D/C=0<up>, Exec=0, DPL(ring level)=0<system>, Present=1
 * Flags:
-L(x86-64 only)=1, Size=1<pm 32>, Granularity=1
+L(x86-64 only)=0, Size=1<pm 32>, Granularity=1
