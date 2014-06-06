@@ -63,7 +63,6 @@ static inline void dump_access_byte(struct access_byte ab)
         ab.pr);
 }
 
-
 static inline void dump_flags(struct flags fl)
 {
     assert(fl.zero == 0);
