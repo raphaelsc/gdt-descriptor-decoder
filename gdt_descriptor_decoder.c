@@ -104,7 +104,7 @@ int main(int argc, char **argv)
     } else {
         printf("Mode: %d-bit Protected mode\nType: %s\n", 
 	    (desc.fl.sz) ? 32 : 16, get_descriptor_type(desc.ab.ex));
-        base = build_base(desc.base_0_15, desc.base_0_15, desc.base_24_31);
+        base = build_base(desc.base_0_15, desc.base_16_23, desc.base_24_31);
         limit = build_limit(desc.limit_0_15, desc.limit_16_19);
 	if (desc.fl.gran) {
 	    limit = (limit << 12U) + 0xFFF;
