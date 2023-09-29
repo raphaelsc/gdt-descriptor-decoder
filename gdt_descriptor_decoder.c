@@ -51,7 +51,11 @@ static inline uint32_t build_limit(uint16_t limit_0_15, uint8_t limit_16_19)
 
 static inline void dump_access_byte(struct access_byte ab)
 {
-    assert(ab.one == 1);
+    if (ab.one != 1)
+    {
+        printf("Could not read access byte (one bit is not set!).\n");
+	return;
+    }
     printf("Accessed=%d, %s=%d, D/C=%d%s, Exec=%d, "
         "DPL(ring level)=%d<%s>, Present=%d\n",
         ab.access, 
@@ -65,7 +69,11 @@ static inline void dump_access_byte(struct access_byte ab)
 
 static inline void dump_flags(struct flags fl)
 {
-    assert(fl.zero == 0);
+    if (fl.zero == 0)
+    {
+        printf("Could not read flags (zero bit is set!).\n");
+	return;
+    }
     printf("L(x86-64 only)=%d, Size=%d<pm %d>, Granularity=%d\n",
         fl.l, fl.sz, (fl.sz) ? 32 : 16, fl.gran);
 }
