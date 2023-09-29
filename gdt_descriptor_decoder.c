@@ -69,7 +69,7 @@ static inline void dump_access_byte(struct access_byte ab)
 
 static inline void dump_flags(struct flags fl)
 {
-    if (fl.zero == 0)
+    if (fl.zero != 0)
     {
         printf("Could not read flags (zero bit is set!).\n");
 	return;
